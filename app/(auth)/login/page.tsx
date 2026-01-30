@@ -68,6 +68,7 @@ export default function Page() {
 						>
 							Sign up
 						</Link>
+						{/* biome-ignore lint/style/useConsistentCurlyBraces: space before text is intentional */}
 						{" for free."}
 					</p>
 				</AuthForm>

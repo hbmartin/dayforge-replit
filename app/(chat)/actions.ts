@@ -12,6 +12,9 @@ import {
 } from "@/lib/db/queries";
 import { getTextFromMessage } from "@/lib/utils";
 
+const TITLE_PREFIX_REGEX = /^[#*"\s]+/;
+const TITLE_SUFFIX_REGEX = /["]+$/;
+
 export async function saveChatModelAsCookie(model: string) {
 	const cookieStore = await cookies();
 	cookieStore.set("chat-model", model);
@@ -28,8 +31,8 @@ export async function generateTitleFromUserMessage({
 		prompt: getTextFromMessage(message),
 	});
 	return text
-		.replace(/^[#*"\s]+/, "")
-		.replace(/["]+$/, "")
+		.replace(TITLE_PREFIX_REGEX, "")
+		.replace(TITLE_SUFFIX_REGEX, "")
 		.trim();
 }
 

@@ -11,6 +11,28 @@ const authFormSchema = z.object({
 	password: z.string().min(6),
 });
 
+function parseAuthFormData(formData: FormData) {
+	return authFormSchema.parse({
+		email: formData.get("email"),
+		password: formData.get("password"),
+	});
+}
+
+async function signInWithCredentials(email: string, password: string) {
+	await signIn("credentials", {
+		email,
+		password,
+		redirect: false,
+	});
+}
+
+function handleAuthError<T extends { status: string }>(error: unknown): T {
+	if (error instanceof z.ZodError) {
+		return { status: "invalid_data" } as T;
+	}
+	return { status: "failed" } as T;
+}
+
 export type LoginActionState = {
 	status: "idle" | "in_progress" | "success" | "failed" | "invalid_data";
 };
@@ -20,24 +42,11 @@ export const login = async (
 	formData: FormData,
 ): Promise<LoginActionState> => {
 	try {
-		const validatedData = authFormSchema.parse({
-			email: formData.get("email"),
-			password: formData.get("password"),
-		});
-
-		await signIn("credentials", {
-			email: validatedData.email,
-			password: validatedData.password,
-			redirect: false,
-		});
-
+		const { email, password } = parseAuthFormData(formData);
+		await signInWithCredentials(email, password);
 		return { status: "success" };
 	} catch (error) {
-		if (error instanceof z.ZodError) {
-			return { status: "invalid_data" };
-		}
-
-		return { status: "failed" };
+		return handleAuthError<LoginActionState>(error);
 	}
 };
 
@@ -56,29 +65,19 @@ export const register = async (
 	formData: FormData,
 ): Promise<RegisterActionState> => {
 	try {
-		const validatedData = authFormSchema.parse({
-			email: formData.get("email"),
-			password: formData.get("password"),
-		});
+		const { email, password } = parseAuthFormData(formData);
 
-		const [user] = await getUser(validatedData.email);
+		const [user] = await getUser(email);
 
 		if (user) {
-			return { status: "user_exists" } as RegisterActionState;
+			return { status: "user_exists" };
 		}
-		await createUser(validatedData.email, validatedData.password);
-		await signIn("credentials", {
-			email: validatedData.email,
-			password: validatedData.password,
-			redirect: false,
-		});
+
+		await createUser(email, password);
+		await signInWithCredentials(email, password);
 
 		return { status: "success" };
 	} catch (error) {
-		if (error instanceof z.ZodError) {
-			return { status: "invalid_data" };
-		}
-
-		return { status: "failed" };
+		return handleAuthError<RegisterActionState>(error);
 	}
 };

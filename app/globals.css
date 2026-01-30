@@ -210,6 +210,7 @@
 
 .skeleton {
 	* {
+		/* biome-ignore lint/complexity/noImportantStyles: needed to disable interactions during skeleton loading */
 		pointer-events: none !important;
 	}
 

@@ -61,6 +61,7 @@ export default function Page() {
 				<AuthForm action={handleSubmit} defaultEmail={email}>
 					<SubmitButton isSuccessful={isSuccessful}>Sign Up</SubmitButton>
 					<p className="mt-4 text-center text-gray-600 text-sm dark:text-zinc-400">
+						{/* biome-ignore lint/style/useConsistentCurlyBraces: space after text is intentional */}
 						{"Already have an account? "}
 						<Link
 							className="font-semibold text-gray-800 hover:underline dark:text-zinc-200"
@@ -68,6 +69,7 @@ export default function Page() {
 						>
 							Sign in
 						</Link>
+						{/* biome-ignore lint/style/useConsistentCurlyBraces: space before text is intentional */}
 						{" instead."}
 					</p>
 				</AuthForm>

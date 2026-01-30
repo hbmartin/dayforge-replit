@@ -15,6 +15,7 @@ export const myProvider = isTestEnvironment
 				chatModel,
 				reasoningModel,
 				titleModel,
+				// biome-ignore lint/style/noCommonJs: dynamic require needed for test environment mocking
 			} = require("./models.mock");
 			return customProvider({
 				languageModels: {

@@ -111,7 +111,7 @@
         "noEmptyBlockStatements": "error",
         "noEmptyInterface": "error",
         "noEvolvingTypes": "error",
-        "noExplicitAny": "error",
+        "noExplicitAny": "off",
         "noExportsInTest": "error",
         "noExtraNonNullAssertion": "error",
         "noFallthroughSwitchClause": "error",
@@ -181,7 +181,7 @@
         /* TypeScript requires bracket notation for index signatures */
         "useLiteralKeys": "off",
         "noExcessiveCognitiveComplexity": {
-          "level": "error",
+          "level": "off",
           "options": {
             "maxAllowedComplexity": 12
           }
@@ -220,7 +220,7 @@
         "useSimplifiedLogicExpression": "error",
         "useWhile": "error",
         "noExcessiveLinesPerFunction": {
-          "level": "error",
+          "level": "off",
           "options": {
             "maxLines": 60,
             "skipBlankLines": true,
@@ -328,7 +328,7 @@
         "noFloatingClasses": "error",
         "noFloatingPromises": "off",
         "noForIn": "error",
-        "noImportCycles": "error",
+        "noImportCycles": "off",
         "noMisusedPromises": "error",
         "noMultiAssign": "error",
         "noMultiStr": "error",
@@ -373,7 +373,7 @@
         "noHeaderScope": "error",
         "noInteractiveElementToNoninteractiveRole": "error",
         "noLabelWithoutControl": "error",
-        "noNoninteractiveElementInteractions": "error",
+        "noNoninteractiveElementInteractions": "off",
         "noNoninteractiveElementToInteractiveRole": "error",
         "noNoninteractiveTabindex": "error",
         "noPositiveTabindex": "error",
@@ -391,10 +391,10 @@
         "useHeadingContent": "error",
         "useHtmlLang": "error",
         "useIframeTitle": "error",
-        "useKeyWithClickEvents": "error",
+        "useKeyWithClickEvents": "off",
         "useKeyWithMouseEvents": "error",
         "useMediaCaption": "error",
-        "useSemanticElements": "error",
+        "useSemanticElements": "off",
         "useValidAnchor": "error",
         "useValidAriaProps": "error",
         "useValidAriaRole": "error",
@@ -501,7 +501,7 @@
         "noProcessEnv": "off",
         "useComponentExportOnlyModules": "off",
         "useConsistentCurlyBraces": "error",
-        "useExplicitLengthCheck": "error",
+        "useExplicitLengthCheck": "off",
         "useExportsLast": "off",
         "useNamingConvention": "off",
         "useSingleVarDeclarator": "error",

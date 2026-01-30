@@ -166,6 +166,7 @@ export async function POST(request: Request) {
 
 				dataStream.merge(result.toUIMessageStream({ sendReasoning: true }));
 
+				// biome-ignore lint/nursery/noMisusedPromises: checking if titlePromise was created
 				if (titlePromise) {
 					const title = await titlePromise;
 					dataStream.write({ type: "data-chat-title", data: title });
@@ -178,6 +179,7 @@ export async function POST(request: Request) {
 					for (const finishedMsg of finishedMessages) {
 						const existingMsg = uiMessages.find((m) => m.id === finishedMsg.id);
 						if (existingMsg) {
+							// biome-ignore lint/performance/noAwaitInLoops: sequential processing required for message ordering
 							await updateMessage({
 								id: finishedMsg.id,
 								parts: finishedMsg.parts,

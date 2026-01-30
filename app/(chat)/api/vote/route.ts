@@ -2,6 +2,26 @@ import { auth } from "@/app/(auth)/auth";
 import { getChatById, getVotesByChatId, voteMessage } from "@/lib/db/queries";
 import { ChatSDKError } from "@/lib/errors";
 
+async function validateChatAccess(chatId: string) {
+	const session = await auth();
+
+	if (!session?.user) {
+		return { error: new ChatSDKError("unauthorized:vote").toResponse() };
+	}
+
+	const chat = await getChatById({ id: chatId });
+
+	if (!chat) {
+		return { error: new ChatSDKError("not_found:chat").toResponse() };
+	}
+
+	if (chat.userId !== session.user.id) {
+		return { error: new ChatSDKError("forbidden:vote").toResponse() };
+	}
+
+	return { session, chat };
+}
+
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
 	const chatId = searchParams.get("chatId");
@@ -13,20 +33,9 @@ export async function GET(request: Request) {
 		).toResponse();
 	}
 
-	const session = await auth();
-
-	if (!session?.user) {
-		return new ChatSDKError("unauthorized:vote").toResponse();
-	}
-
-	const chat = await getChatById({ id: chatId });
-
-	if (!chat) {
-		return new ChatSDKError("not_found:chat").toResponse();
-	}
-
-	if (chat.userId !== session.user.id) {
-		return new ChatSDKError("forbidden:vote").toResponse();
+	const result = await validateChatAccess(chatId);
+	if ("error" in result) {
+		return result.error;
 	}
 
 	const votes = await getVotesByChatId({ id: chatId });
@@ -49,20 +58,9 @@ export async function PATCH(request: Request) {
 		).toResponse();
 	}
 
-	const session = await auth();
-
-	if (!session?.user) {
-		return new ChatSDKError("unauthorized:vote").toResponse();
-	}
-
-	const chat = await getChatById({ id: chatId });
-
-	if (!chat) {
-		return new ChatSDKError("not_found:vote").toResponse();
-	}
-
-	if (chat.userId !== session.user.id) {
-		return new ChatSDKError("forbidden:vote").toResponse();
+	const result = await validateChatAccess(chatId);
+	if ("error" in result) {
+		return result.error;
 	}
 
 	await voteMessage({

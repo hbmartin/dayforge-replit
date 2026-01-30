@@ -7,6 +7,27 @@ import {
 } from "@/lib/db/queries";
 import { ChatSDKError } from "@/lib/errors";
 
+async function validateDocumentAccess(id: string) {
+	const session = await auth();
+
+	if (!session?.user) {
+		return { error: new ChatSDKError("unauthorized:document").toResponse() };
+	}
+
+	const documents = await getDocumentsById({ id });
+	const [document] = documents;
+
+	if (!document) {
+		return { error: new ChatSDKError("not_found:document").toResponse() };
+	}
+
+	if (document.userId !== session.user.id) {
+		return { error: new ChatSDKError("forbidden:document").toResponse() };
+	}
+
+	return { session, documents };
+}
+
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
 	const id = searchParams.get("id");
@@ -18,25 +39,12 @@ export async function GET(request: Request) {
 		).toResponse();
 	}
 
-	const session = await auth();
-
-	if (!session?.user) {
-		return new ChatSDKError("unauthorized:document").toResponse();
+	const result = await validateDocumentAccess(id);
+	if ("error" in result) {
+		return result.error;
 	}
 
-	const documents = await getDocumentsById({ id });
-
-	const [document] = documents;
-
-	if (!document) {
-		return new ChatSDKError("not_found:document").toResponse();
-	}
-
-	if (document.userId !== session.user.id) {
-		return new ChatSDKError("forbidden:document").toResponse();
-	}
-
-	return Response.json(documents, { status: 200 });
+	return Response.json(result.documents, { status: 200 });
 }
 
 export async function POST(request: Request) {
@@ -103,18 +111,9 @@ export async function DELETE(request: Request) {
 		).toResponse();
 	}
 
-	const session = await auth();
-
-	if (!session?.user) {
-		return new ChatSDKError("unauthorized:document").toResponse();
-	}
-
-	const documents = await getDocumentsById({ id });
-
-	const [document] = documents;
-
-	if (document?.userId !== session.user.id) {
-		return new ChatSDKError("forbidden:document").toResponse();
+	const result = await validateDocumentAccess(id);
+	if ("error" in result) {
+		return result.error;
 	}
 
 	const documentsDeleted = await deleteDocumentsByIdAfterTimestamp({

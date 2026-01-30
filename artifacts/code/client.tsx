@@ -168,6 +168,7 @@ export const codeArtifact = new Artifact<"code", Metadata>({
 					const requiredHandlers = detectRequiredHandlers(content);
 					for (const handler of requiredHandlers) {
 						if (OUTPUT_HANDLERS[handler as keyof typeof OUTPUT_HANDLERS]) {
+							// biome-ignore lint/performance/noAwaitInLoops: sequential handler setup required
 							await currentPyodideInstance.runPythonAsync(
 								OUTPUT_HANDLERS[handler as keyof typeof OUTPUT_HANDLERS],
 							);

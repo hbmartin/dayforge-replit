@@ -14,7 +14,13 @@ export default defineConfig({
 		restoreMocks: true,
 		reporters: ["dot"],
 		include: ["tests/**/*.test.ts", "tests/**/*.test.tsx"],
-		exclude: ["node_modules", "dist", "build", "lib/ai/models.test.ts", "tests/e2e/**"],
+		exclude: [
+			"node_modules",
+			"dist",
+			"build",
+			"lib/ai/models.test.ts",
+			"tests/e2e/**",
+		],
 		coverage: {
 			provider: "v8",
 			reporter: ["text", "text-summary", "lcov", "html", "json-summary"],

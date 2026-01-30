@@ -49,6 +49,7 @@ const createMockModel = (): LanguageModel => {
 								id: "t1",
 								delta: `${word} `,
 							});
+							// biome-ignore lint/performance/noAwaitInLoops: intentional delay between words for streaming simulation
 							await new Promise((resolve) => {
 								setTimeout(resolve, 10);
 							});

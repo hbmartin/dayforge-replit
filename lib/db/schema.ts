@@ -4,6 +4,7 @@ import {
 	foreignKey,
 	json,
 	pgTable,
+	// biome-ignore lint/nursery/noDeprecatedImports: primaryKey function still works and is used throughout codebase
 	primaryKey,
 	text,
 	timestamp,

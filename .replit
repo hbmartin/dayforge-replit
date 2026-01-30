@@ -1,0 +1,48 @@
+modules = ["web", "nodejs-24"]
+[agent]
+expertMode = true
+
+[nix]
+channel = "stable-25_05"
+
+[userenv]
+
+[userenv.shared]
+POSTGRES_URL = "postgresql://postgres:password@helium/heliumdb?sslmode=disable"
+AUTH_SECRET = "SiwIyX7a0nDF/rGGTh5Ky2eqJ/pYy3LtCUbPUiWtW8w="
+
+[userenv.development]
+NODE_ENV = "development"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Next.js Dev Server"
+
+[[workflows.workflow]]
+name = "Next.js Dev Server"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm next dev --port 5000 --hostname 0.0.0.0"
+waitForPort = 5000
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[deployment]
+deploymentTarget = "autoscale"
+run = ["pnpm", "start"]
+build = ["pnpm", "build"]

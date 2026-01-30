@@ -1,0 +1,33 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "tags": ["-lintignore"],
+  "drizzle": false,
+  "entry": [
+    "app/**/page.tsx",
+    "app/**/layout.tsx",
+    "app/**/route.ts",
+    "app/**/actions.ts",
+    "app/**/error.tsx",
+    "components/**/*.tsx",
+    "scripts/*.ts",
+    "sheriff.config.ts",
+    "tests/**/*.ts",
+    "drizzle.config.ts"
+  ],
+  "project": ["**/*.{ts,tsx}", "!**/*.d.ts"],
+  "ignore": ["modules/kernel/infrastructure/db/migrations/**"],
+  "ignoreDependencies": [
+    "@internationalized/date",
+    "@radix-ui/react-*",
+    "@tanstack/react-table",
+    "@vercel/analytics",
+    "tailwindcss-animate",
+    "@tailwindcss/typography",
+    "tailwindcss"
+  ],
+  "ignoreBinaries": ["jq"],
+  "ignoreExportsUsedInFile": true,
+  "rules": {
+    "unlisted": "warn"
+  }
+}
